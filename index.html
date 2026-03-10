@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>萌芽汉字 (Moe Hanzi) - 快乐启蒙</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts for rounded feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Rounded+Mplus+1c:wght@400;700&family=Varela+Round&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Top Bar: Progress & Status -->
+    <div class="top-bar">
+        <div class="status-text">
+            <span id="level-display">Level 1: 萌芽期</span>
+            <span id="counter-display">1 / 50</span>
+        </div>
+        <div class="progress-container">
+            <div id="progress-bar" class="progress-bar"></div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-container">
+        <!-- Card -->
+        <div class="card-area" id="card-area">
+            <h1 class="hanzi-large" id="hanzi-display">一</h1>
+            <div class="pinyin-large" id="pinyin-display">yī</div>
+            
+            <!-- Animation / Visual Container -->
+            <div class="animation-area" id="animation-area">
+                <!-- Content injected by JS -->
+            </div>
+
+            <div class="english-large" id="english-display">One</div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="nav-buttons">
+            <button id="btn-prev" class="nav-btn btn-prev">
+                <span>⬅️</span> 上一个
+            </button>
+            <button id="btn-next" class="nav-btn btn-next">
+                下一个 <span>➡️</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Milestone Overlay -->
+    <div id="milestone-overlay" class="milestone-overlay">
+        <div class="milestone-content">
+            <div class="emoji-display">🎉</div>
+            <div class="milestone-text">太棒了！</div>
+            <div style="font-size: 1.5rem; color: #666;">你已经学会了 <span id="milestone-count" style="color: var(--primary-color); font-weight: bold;">5</span> 个字！</div>
+        </div>
+    </div>
+
+    <!-- Data & Scripts -->
+    <script src="hanzi_data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

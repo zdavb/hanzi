@@ -1,0 +1,718 @@
+:root {
+    --bg-color: #f0f8ff;
+    --card-bg: #ffffff;
+    --text-color: #333;
+    --primary-color: #ff6b6b;
+    --secondary-color: #4ecdc4;
+    --accent-color: #ffe66d;
+}
+
+body {
+    font-family: "Rounded Mplus 1c", "Varela Round", "KaiTi", "楷体", sans-serif;
+    background-color: var(--bg-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    margin: 0;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* =========================================
+   Layout & UI Components
+   ========================================= */
+
+.top-bar {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.progress-container {
+    width: 100%;
+    height: 20px;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: var(--secondary-color);
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+.status-text {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.1rem;
+    color: #555;
+    font-weight: bold;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+    flex: 1;
+    justify-content: center;
+}
+
+.card-area {
+    width: 100%;
+    aspect-ratio: 4/5;
+    max-height: 60vh;
+    background: var(--card-bg);
+    border-radius: 30px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 30px;
+    transition: transform 0.3s ease;
+}
+
+.hanzi-large {
+    font-size: 8rem;
+    font-family: "KaiTi", "楷体", serif;
+    color: #333;
+    margin: 0;
+    line-height: 1;
+    z-index: 2;
+}
+
+.pinyin-large {
+    font-size: 2.5rem;
+    color: #888;
+    margin: 10px 0;
+}
+
+.english-large {
+    font-size: 1.5rem;
+    color: #aaa;
+    margin-bottom: 20px;
+}
+
+.animation-area {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: 20px;
+    background-color: #fafafa;
+    overflow: hidden;
+    min-height: 200px;
+}
+
+/* 导航按钮 */
+.nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 600px;
+    gap: 20px;
+}
+
+.nav-btn {
+    flex: 1;
+    padding: 20px;
+    border: none;
+    border-radius: 20px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.btn-prev {
+    background-color: #fff;
+    color: var(--text-color);
+}
+
+.btn-next {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.nav-btn:active {
+    transform: scale(0.95);
+}
+
+.nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 里程碑动画层 */
+.milestone-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.95);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+.milestone-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.milestone-content {
+    text-align: center;
+    animation: bounce 1s infinite alternate;
+}
+
+.milestone-text {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin: 20px 0;
+}
+
+@keyframes bounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-20px); }
+}
+
+/* =========================================
+   通用 Emoji 样式 (Generic)
+   ========================================= */
+.emoji-display {
+    font-size: 100px;
+    animation: float 3s ease-in-out infinite;
+    z-index: 1;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+/* =========================================
+   创意字形样式实现 (Special CSS)
+   ========================================= */
+
+/* 1. 一 (Yi) - 骨头 (Bone) */
+.bone-container {
+    width: 140px;
+    height: 40px;
+    position: relative;
+    background: #fdf5e6; /* 骨头色 */
+    border: 3px solid #d2b48c;
+    border-radius: 10px;
+    z-index: 1;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}
+/* 骨头两端的圆球 */
+.bone-container::before, .bone-container::after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 50px;
+    background: #fdf5e6;
+    border: 3px solid #d2b48c;
+    border-radius: 15px;
+    top: -8px;
+    z-index: -1;
+}
+.bone-container::before { left: -10px; }
+.bone-container::after { right: -10px; }
+
+
+/* 2. 二 (Er) - 两根筷子 (Chopsticks) */
+.chopsticks-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    z-index: 1;
+}
+.chopstick {
+    width: 140px;
+    height: 12px;
+    background: #8b4513; /* 木头色 */
+    border-radius: 5px 2px 2px 5px; /* 左圆右方 */
+    position: relative;
+    box-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+}
+/* 筷子头的装饰纹路 */
+.chopstick::after {
+    content: '';
+    position: absolute;
+    right: 10px;
+    top: 0;
+    width: 15px;
+    height: 100%;
+    background: #cd853f;
+    opacity: 0.5;
+}
+
+
+/* 3. 三 (San) - 汉堡 (Burger) */
+.burger-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1;
+}
+.bun-top {
+    width: 120px;
+    height: 30px;
+    background: #f4a460;
+    border-radius: 30px 30px 5px 5px; /* 上圆下方 */
+    border: 3px solid #8b4513;
+    position: relative;
+}
+/* 芝麻 */
+.bun-top::after {
+    content: '...';
+    color: #fff;
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 20px;
+    letter-spacing: 5px;
+}
+.patty {
+    width: 130px;
+    height: 25px;
+    background: #8b0000; /* 肉色 */
+    border-radius: 10px;
+    border: 3px solid #5a0000;
+    margin-left: -5px; /* 肉稍微宽一点 */
+}
+.lettuce { /* 用作中间层的装饰 */
+    position: absolute;
+    width: 100%;
+    height: 5px;
+    background: #32cd32;
+    top: -5px;
+    border-radius: 5px;
+}
+.bun-bottom {
+    width: 120px;
+    height: 25px;
+    background: #f4a460;
+    border-radius: 5px 5px 20px 20px; /* 上方下圆 */
+    border: 3px solid #8b4513;
+}
+
+
+/* 4. 口 (Kou) - 张大的嘴巴 (Mouth) */
+.mouth-container {
+    width: 100px;
+    height: 90px;
+    background: #ffcccb; /* 皮肤色 */
+    border: 4px solid #d2691e;
+    border-radius: 30px;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: mouth-open 2s infinite ease-in-out;
+}
+@keyframes mouth-open {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.8); }
+}
+/* 嘴巴内部 */
+.mouth-inner {
+    width: 60px;
+    height: 50px;
+    background: #800000; /* 深红口腔 */
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+}
+/* 牙齿 */
+.mouth-inner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 10px;
+    width: 40px;
+    height: 10px;
+    background: white;
+    border-radius: 0 0 5px 5px;
+}
+/* 舌头 */
+.mouth-inner::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 15px;
+    width: 30px;
+    height: 30px;
+    background: #ff6347;
+    border-radius: 50%;
+    animation: tongue-move 2s infinite ease-in-out;
+}
+@keyframes tongue-move {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(5px); }
+}
+
+
+/* 5. 山 (Shan) - 山峰 (Mountains) */
+.mountain-container {
+    display: flex;
+    align-items: flex-end;
+    gap: 0;
+    z-index: 1;
+    height: 100px;
+}
+.mountain {
+    width: 0;
+    height: 0;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    border-bottom: 60px solid #228b22; /* 绿色山体 */
+    position: relative;
+}
+/* 中间的高山 */
+.mountain.middle {
+    border-bottom-width: 90px; /* 更高 */
+    border-left-width: 35px;
+    border-right-width: 35px;
+    border-bottom-color: #006400; /* 深绿 */
+    margin: 0 -10px; /* 重叠效果 */
+    z-index: 2;
+}
+/* 山顶积雪 */
+.mountain::after {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: -10px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 20px solid white;
+}
+.mountain.middle::after {
+     top: 9px;
+     left: -14px;
+     border-left-width: 14px;
+     border-right-width: 14px;
+     border-bottom-width: 30px;
+}
+
+
+/* 6. 日 (Ri) - 太阳 (Sun) */
+.sun-container {
+    width: 80px;
+    height: 80px;
+    background: #ffd700;
+    border: 4px solid #ffa500;
+    border-radius: 10px; /* 稍微方一点，接近汉字日 */
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+}
+/* 中间的一横 - 变成太阳的墨镜或者云彩 */
+.sun-bar {
+    width: 50px;
+    height: 8px;
+    background: #ffa500;
+    border-radius: 4px;
+}
+/* 光芒 */
+.sun-rays {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px dashed #ffa500;
+    opacity: 0.5;
+    animation: rotate 10s linear infinite;
+}
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* 7. 田 (Tian) - 农田 (Field) */
+.field-container {
+    width: 80px;
+    height: 80px;
+    background: #8fbc8f; /* 浅绿 */
+    border: 4px solid #556b2f; /* 深橄榄绿 */
+    border-radius: 5px;
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+.field-cell {
+    border: 2px solid #556b2f;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.field-cell::after {
+    content: '🌱'; /* 禾苗 */
+    font-size: 20px;
+    animation: grow 3s infinite ease-in-out;
+}
+@keyframes grow {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+/* 8. 雨 (Yu) - 下雨 (Rain) */
+.rain-container {
+    width: 100px;
+    height: 100px;
+    position: relative;
+    z-index: 1;
+}
+.cloud {
+    width: 80px;
+    height: 30px;
+    background: #b0c4de;
+    border-radius: 20px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    box-shadow: 10px 10px 0 0 #b0c4de inset;
+}
+.cloud::after {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: 15px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #b0c4de;
+}
+.raindrop {
+    position: absolute;
+    width: 4px;
+    height: 10px;
+    background: #87ceeb;
+    border-radius: 2px;
+    animation: rain-fall 1s infinite linear;
+}
+.raindrop:nth-child(2) { left: 20px; top: 40px; animation-delay: 0s; }
+.raindrop:nth-child(3) { left: 40px; top: 50px; animation-delay: 0.3s; }
+.raindrop:nth-child(4) { left: 60px; top: 45px; animation-delay: 0.6s; }
+.raindrop:nth-child(5) { left: 30px; top: 60px; animation-delay: 0.2s; }
+
+@keyframes rain-fall {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(50px); opacity: 0; }
+}
+
+/* 9. 门 (Men) - 双扇门 (Door) */
+.door-container {
+    width: 80px;
+    height: 100px;
+    border: 4px solid #8b4513;
+    position: relative;
+    z-index: 1;
+    perspective: 200px;
+}
+.door-left, .door-right {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    background: #deb887;
+    border: 1px solid #8b4513;
+    transform-origin: 0% 50%; /* 左门轴 */
+    transition: transform 0.5s;
+}
+.door-right {
+    right: 0;
+    transform-origin: 100% 50%; /* 右门轴 */
+}
+.door-knob {
+    position: absolute;
+    top: 50%;
+    width: 6px;
+    height: 6px;
+    background: #ffd700;
+    border-radius: 50%;
+}
+.door-left .door-knob { right: 5px; }
+.door-right .door-knob { left: 5px; }
+
+/* 门开启动画 */
+.animation-area:hover .door-left, .door-container.open .door-left { transform: rotateY(-45deg); }
+.animation-area:hover .door-right, .door-container.open .door-right { transform: rotateY(45deg); }
+
+/* 10. 伞 (San) - 蘑菇伞 (Umbrella) */
+.umbrella-container {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1;
+}
+.umbrella-top {
+    width: 80px;
+    height: 40px;
+    background: #ff69b4;
+    border-radius: 40px 40px 0 0;
+    position: relative;
+}
+/* 伞面装饰 */
+.umbrella-top::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background: radial-gradient(circle at 10px 0, transparent 10px, #ff69b4 11px);
+    background-size: 20px 10px;
+    background-repeat: repeat-x;
+    transform: rotate(180deg);
+}
+.umbrella-handle {
+    width: 6px;
+    height: 50px;
+    background: #333;
+    border-radius: 0 0 5px 5px;
+    position: relative;
+}
+/* 伞柄弯钩 */
+.umbrella-handle::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 15px;
+    height: 15px;
+    border: 6px solid #333;
+    border-top: none;
+    border-right: none;
+    border-radius: 0 0 0 15px;
+}
+
+/* 11. 羊 (Yang) - 羊角 (Sheep) */
+.sheep-container {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    z-index: 1;
+}
+.sheep-head {
+    width: 50px;
+    height: 40px;
+    background: #fff;
+    border: 2px solid #333;
+    border-radius: 50% 50% 40% 40%;
+    position: absolute;
+    top: 30px;
+    left: 15px;
+    z-index: 2;
+}
+.sheep-horn {
+    width: 20px;
+    height: 20px;
+    border-top: 4px solid #333;
+    border-left: 4px solid #333;
+    border-radius: 10px 0 0 0;
+    position: absolute;
+    top: 20px;
+}
+.sheep-horn.left { left: 10px; transform: rotate(-20deg); }
+.sheep-horn.right { right: 10px; transform: scaleX(-1) rotate(-20deg); }
+.sheep-eye {
+    width: 4px;
+    height: 4px;
+    background: #333;
+    border-radius: 50%;
+    position: absolute;
+    top: 15px;
+}
+.sheep-eye.left { left: 12px; }
+.sheep-eye.right { right: 12px; }
+
+/* 12. 鱼 (Yu) - 游鱼 (Fish) */
+.fish-container {
+    width: 100px;
+    height: 60px;
+    position: relative;
+    z-index: 1;
+    animation: swim 3s infinite ease-in-out;
+}
+@keyframes swim {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(10px); }
+}
+.fish-body {
+    width: 70px;
+    height: 40px;
+    background: #ffa07a;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}
+.fish-tail {
+    width: 0;
+    height: 0;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-left: 20px solid #ffa07a;
+    position: absolute;
+    right: 0;
+    top: 15px;
+}
+.fish-eye {
+    width: 6px;
+    height: 6px;
+    background: #000;
+    border-radius: 50%;
+    position: absolute;
+    left: 25px;
+    top: 20px;
+    background: white;
+}
+.fish-eye::after {
+    content: '';
+    width: 3px;
+    height: 3px;
+    background: black;
+    border-radius: 50%;
+    position: absolute;
+    left: 1px;
+    top: 1px;
+}
