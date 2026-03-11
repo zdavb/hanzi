@@ -9,8 +9,8 @@ const englishDisplay = document.getElementById('english-display');
 const animationArea = document.getElementById('animation-area');
 const btnPrev = document.getElementById('btn-prev');
 const btnNext = document.getElementById('btn-next');
-const milestoneOverlay = document.getElementById('milestone-overlay');
-const milestoneCount = document.getElementById('milestone-count');
+// const milestoneOverlay = document.getElementById('milestone-overlay');
+// const milestoneCount = document.getElementById('milestone-count');
 
 // State
 let currentIndex = 0;
@@ -167,19 +167,15 @@ function updateProgressUI() {
     counterDisplay.textContent = `${learned} / ${total}`;
 }
 
-// Milestone Check
+// Milestone Check - Disabled
 function checkMilestone() {
-    // Check if we just completed a multiple of MILESTONE_STEP
-    // Note: This logic triggers when we arrive at a new card index that is a multiple of 5
-    // But since index starts at 0, index 4 is the 5th card.
-    // Let's trigger when (currentIndex + 1) % MILESTONE_STEP === 0
-    const learnedCount = currentIndex + 1;
-    if (learnedCount > 0 && learnedCount % MILESTONE_STEP === 0) {
-        showMilestone(learnedCount);
-    }
+    // Milestone feature is currently disabled based on user feedback.
+    return; 
 }
 
 function showMilestone(count) {
+    // Disabled
+    /*
     milestoneCount.textContent = count;
     milestoneOverlay.classList.add('active');
     
@@ -187,6 +183,7 @@ function showMilestone(count) {
     setTimeout(() => {
         milestoneOverlay.classList.remove('active');
     }, 3000);
+    */
 }
 
 // Navigation Handlers
