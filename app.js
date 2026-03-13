@@ -9,12 +9,19 @@ const englishDisplay = document.getElementById('english-display');
 const animationArea = document.getElementById('animation-area');
 const btnPrev = document.getElementById('btn-prev');
 const btnNext = document.getElementById('btn-next');
-// const milestoneOverlay = document.getElementById('milestone-overlay');
-// const milestoneCount = document.getElementById('milestone-count');
+const btnMistakes = document.getElementById('btn-mistakes');
+const btnJump = document.getElementById('btn-jump');
+const jumpInput = document.getElementById('jump-input');
+const btnMark = document.getElementById('btn-mark');
+const mistakeModal = document.getElementById('mistake-modal');
+const btnCloseModal = document.getElementById('btn-close-modal');
+const mistakeListContainer = document.getElementById('mistake-list');
 
 // State
 let currentIndex = 0;
+let mistakeList = [];
 const STORAGE_KEY = 'moe_hanzi_progress';
+const MISTAKE_KEY = 'moe_hanzi_mistakes';
 const MILESTONE_STEP = 5;
 
 // Helper to create elements with class
@@ -108,6 +115,7 @@ const specialRenderers = {
 // Initialize
 function init() {
     loadProgress();
+    loadMistakes();
     renderCurrentCard();
     updateProgressUI();
 }
@@ -123,9 +131,26 @@ function loadProgress() {
     }
 }
 
+// Load Mistakes
+function loadMistakes() {
+    const saved = localStorage.getItem(MISTAKE_KEY);
+    if (saved) {
+        try {
+            mistakeList = JSON.parse(saved);
+        } catch (e) {
+            mistakeList = [];
+        }
+    }
+}
+
 // Save Progress
 function saveProgress() {
     localStorage.setItem(STORAGE_KEY, currentIndex.toString());
+}
+
+// Save Mistakes
+function saveMistakes() {
+    localStorage.setItem(MISTAKE_KEY, JSON.stringify(mistakeList));
 }
 
 // Render Card
@@ -142,6 +167,17 @@ function renderCurrentCard() {
     // Level Display
     levelDisplay.textContent = item.level || "Level 1";
 
+    // Mark Button State
+    if (mistakeList.includes(item.char)) {
+        btnMark.textContent = '★'; // Solid Star
+        btnMark.classList.add('active');
+        btnMark.ariaLabel = "移出错题本";
+    } else {
+        btnMark.textContent = '☆'; // Outline Star
+        btnMark.classList.remove('active');
+        btnMark.ariaLabel = "加入错题本";
+    }
+
     // Animation / Visual
     animationArea.innerHTML = ''; // Clear previous
     let visual;
@@ -153,8 +189,8 @@ function renderCurrentCard() {
     animationArea.appendChild(visual);
 
     // Update Buttons State
-    btnPrev.disabled = currentIndex === 0;
-    btnNext.disabled = currentIndex === hanziData.length - 1;
+    if (btnPrev) btnPrev.disabled = currentIndex === 0;
+    if (btnNext) btnNext.disabled = currentIndex === hanziData.length - 1;
 }
 
 // Update Progress UI
@@ -175,46 +211,121 @@ function checkMilestone() {
 
 function showMilestone(count) {
     // Disabled
-    /*
-    milestoneCount.textContent = count;
-    milestoneOverlay.classList.add('active');
+}
+
+function toggleMistake() {
+    const char = hanziData[currentIndex].char;
+    const index = mistakeList.indexOf(char);
     
-    // Auto hide after 3 seconds
-    setTimeout(() => {
-        milestoneOverlay.classList.remove('active');
-    }, 3000);
-    */
+    if (index === -1) {
+        // Add
+        mistakeList.push(char);
+        // Animate visual feedback maybe?
+    } else {
+        // Remove
+        mistakeList.splice(index, 1);
+    }
+    saveMistakes();
+    renderCurrentCard(); // Update button state
+}
+
+function renderMistakeList() {
+    mistakeListContainer.innerHTML = '';
+    
+    if (mistakeList.length === 0) {
+        const empty = el('div', 'empty-state', '暂无错题，继续加油！');
+        mistakeListContainer.appendChild(empty);
+        return;
+    }
+
+    mistakeList.forEach(char => {
+        const item = el('div', 'mistake-item', char);
+        item.addEventListener('click', () => {
+            // Find index of this char
+            const idx = hanziData.findIndex(d => d.char === char);
+            if (idx !== -1) {
+                currentIndex = idx;
+                saveProgress();
+                renderCurrentCard();
+                updateProgressUI();
+                closeModal();
+            }
+        });
+        mistakeListContainer.appendChild(item);
+    });
+}
+
+function openModal() {
+    renderMistakeList();
+    mistakeModal.classList.add('active');
+}
+
+function closeModal() {
+    mistakeModal.classList.remove('active');
+}
+
+// Jump Logic
+function jumpToCard() {
+    const val = parseInt(jumpInput.value, 10);
+    if (!isNaN(val) && val >= 1 && val <= hanziData.length) {
+        currentIndex = val - 1; // 0-based index
+        saveProgress();
+        renderCurrentCard();
+        updateProgressUI();
+        jumpInput.value = ''; // Clear input
+    } else {
+        alert('请输入有效的序号 (1 - ' + hanziData.length + ')');
+    }
+}
+
+// Event Listeners for New Features
+if (btnMark) btnMark.addEventListener('click', toggleMistake);
+if (btnMistakes) btnMistakes.addEventListener('click', openModal);
+if (btnCloseModal) btnCloseModal.addEventListener('click', closeModal);
+if (btnJump) btnJump.addEventListener('click', jumpToCard);
+if (jumpInput) {
+    jumpInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') jumpToCard();
+    });
+}
+
+// Close modal when clicking outside
+if (mistakeModal) {
+    mistakeModal.addEventListener('click', (e) => {
+        if (e.target === mistakeModal) closeModal();
+    });
 }
 
 // Navigation Handlers
-btnPrev.addEventListener('click', () => {
-    if (currentIndex > 0) {
-        currentIndex--;
-        saveProgress();
-        renderCurrentCard();
-        updateProgressUI();
-    }
-});
+if (btnPrev) {
+    btnPrev.addEventListener('click', () => {
+        if (currentIndex > 0) {
+            currentIndex--;
+            saveProgress();
+            renderCurrentCard();
+            updateProgressUI();
+        }
+    });
+}
 
-btnNext.addEventListener('click', () => {
-    if (currentIndex < hanziData.length - 1) {
-        currentIndex++;
-        saveProgress();
-        renderCurrentCard();
-        updateProgressUI();
-        
-        // Check milestone ONLY when moving forward
-        checkMilestone();
-    }
-});
+if (btnNext) {
+    btnNext.addEventListener('click', () => {
+        if (currentIndex < hanziData.length - 1) {
+            currentIndex++;
+            saveProgress();
+            renderCurrentCard();
+            updateProgressUI();
+            
+            // Check milestone ONLY when moving forward
+            checkMilestone();
+        }
+    });
+}
 
 // Keyboard Navigation
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft') {
-        btnPrev.click();
-    } else if (e.key === 'ArrowRight') {
-        btnNext.click();
-    }
+    if (e.key === 'ArrowLeft' && btnPrev) btnPrev.click();
+    if (e.key === 'ArrowRight' && btnNext) btnNext.click();
 });
 
 // Start

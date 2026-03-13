@@ -12,6 +12,13 @@
 
     <!-- Top Bar: Progress & Status -->
     <div class="top-bar">
+        <div class="status-row">
+            <button id="btn-mistakes" class="icon-btn">📖 错题本</button>
+            <div class="jump-box">
+                <input type="number" id="jump-input" min="1" placeholder="序号">
+                <button id="btn-jump">跳转</button>
+            </div>
+        </div>
         <div class="status-text">
             <span id="level-display">Level 1: 萌芽期</span>
             <span id="counter-display">1 / 50</span>
@@ -25,6 +32,7 @@
     <div class="main-container">
         <!-- Card -->
         <div class="card-area" id="card-area">
+            <button id="btn-mark" class="mark-btn" aria-label="加入错题本">☆</button>
             <h1 class="hanzi-large" id="hanzi-display">一</h1>
             <div class="pinyin-large" id="pinyin-display">yī</div>
             
@@ -55,6 +63,20 @@
             <div style="font-size: 1.5rem; color: #666;">你已经学会了 <span id="milestone-count" style="color: var(--primary-color); font-weight: bold;">5</span> 个字！</div>
         </div>
     </div> -->
+
+    <!-- Mistake List Modal -->
+    <div id="mistake-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>错题本</h2>
+                <button id="btn-close-modal" class="close-btn">×</button>
+            </div>
+            <div id="mistake-list" class="mistake-list">
+                <!-- Items injected by JS -->
+                <div class="empty-state">暂无错题，继续加油！</div>
+            </div>
+        </div>
+    </div>
 
     <!-- Data & Scripts -->
     <script src="hanzi_data.js"></script>

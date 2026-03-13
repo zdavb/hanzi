@@ -32,6 +32,45 @@ body {
     margin-bottom: 20px;
 }
 
+.status-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.icon-btn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 20px;
+    background-color: #ffe66d;
+    color: #555;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+}
+
+.jump-box {
+    display: flex;
+    gap: 5px;
+}
+
+.jump-box input {
+    width: 60px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.jump-box button {
+    padding: 5px 10px;
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
 .progress-container {
     width: 100%;
     height: 20px;
@@ -81,6 +120,27 @@ body {
     overflow: hidden;
     margin-bottom: 30px;
     transition: transform 0.3s ease;
+}
+
+.mark-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #ccc;
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.2s;
+}
+
+.mark-btn.active {
+    color: #ffcc00; /* Star color */
+}
+
+.mark-btn:hover {
+    transform: scale(1.1);
 }
 
 .hanzi-large {
@@ -160,43 +220,95 @@ body {
     cursor: not-allowed;
 }
 
-/* 里程碑动画层 */
-.milestone-overlay {
+/* Modal Styles */
+.modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 255, 255, 0.95);
-    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.3s ease;
 }
 
-.milestone-overlay.active {
+.modal-overlay.active {
     opacity: 1;
     pointer-events: all;
 }
 
-.milestone-content {
+.modal-content {
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: var(--text-color);
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #999;
+    cursor: pointer;
+}
+
+.mistake-list {
+    flex: 1;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: 10px;
+    padding: 10px;
+}
+
+.mistake-item {
+    background: #fdf5e6;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+    font-size: 1.5rem;
+    font-family: "KaiTi", "楷体", serif;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.mistake-item:hover {
+    transform: scale(1.05);
+    background-color: #ffe66d;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
     text-align: center;
-    animation: bounce 1s infinite alternate;
-}
-
-.milestone-text {
-    font-size: 3rem;
-    color: var(--primary-color);
-    margin: 20px 0;
-}
-
-@keyframes bounce {
-    from { transform: translateY(0); }
-    to { transform: translateY(-20px); }
+    color: #999;
+    padding: 20px;
 }
 
 /* =========================================
